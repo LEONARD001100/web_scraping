@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from fastapi import FastAPI
 
 #url of rubo
 url="https://robu.in/shop/"
@@ -25,6 +26,17 @@ for category in featured_categories_items:
 
 driver.quit()
 
-print(details)
+app=FastAPI()
 
+@app.get("/")
+def home():
+	return {"message" : "welcome"}
+
+@app.get("/search")
+def search(product: str):
+	for d in details:
+		if product.lower() in d["title"].lower():
+			return d
+	
+	return {"message" : "category not found"}
 
